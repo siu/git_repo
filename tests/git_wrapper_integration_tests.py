@@ -13,12 +13,13 @@ class GitWrapperIntegrationTest(util.RepoTestCase):
         assert('not_committed_file.txt' in self.repo.stage)
         assert('second_not_committed_file.txt' in self.repo.stage)
 
-    def test_paths_external_git_folder(self):
+class GitWrapperIntegrationTestExternalGitFolder(util.RepoTestCase):
+    def test_paths_external(self):
         self.open_tar_repo('project03', '../project03.git')
         assert('test_file.txt' in self.repo.paths)
         assert('hello_world.rb' in self.repo.paths)
 
-    def test_stage_external_git_folder(self):
+    def test_stage_external(self):
         self.open_tar_repo('project04', '../project04.git')
         assert('not_committed_file.txt' in self.repo.stage)
         assert('second_not_committed_file.txt' in self.repo.stage)
