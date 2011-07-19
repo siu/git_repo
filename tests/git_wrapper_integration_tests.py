@@ -17,12 +17,6 @@ class GitWrapperIntegrationTest(util.RepoTestCase):
 
     def test_add(self):
         self.open_tar_repo('project02')
-        assert('not_committed_file.txt' in self.repo.stage)
-        self.assertEqual(self.repo.stage, {
-            'not_committed_file.txt': '??',
-            'second_not_committed_file.txt': '??'
-            })
-
         self.repo.add('not_committed_file.txt')
         self.assertEqual(self.repo.stage, {
             'not_committed_file.txt': 'A',
