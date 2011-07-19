@@ -18,12 +18,13 @@ class RepoTestCase(unittest.TestCase):
         shutil.rmtree(self._temp_dir)
 
     def open_tar_repo(self, repo_dir, git_dir = '.git'):
-        repo_path = os.path.join(os.path.dirname(__file__), 'fixtures',
+        repo_tar = os.path.join(os.path.dirname(__file__), 'fixtures',
                 repo_dir)
         temp_dir = tempfile.mkdtemp()
-        tar = tarfile.open(repo_path + '.tar')
+        tar = tarfile.open(repo_tar + '.tar')
         tar.extractall(temp_dir)
         tar.close()
+        repo_path = os.path.join(temp_dir, repo_dir)
 
         self._temp_dir = temp_dir
         self.repo = GitWrapper(repo_path, git_dir)
