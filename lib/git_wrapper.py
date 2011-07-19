@@ -32,3 +32,7 @@ class GitWrapper(object):
     def execute_git_cmd(self, command):
         cmd = "--git-dir=%s %s" % (self.git_dir, command)
         return execute_git_cmd(cmd, self.path)
+
+    def add(self, path):
+        output = self.execute_git_cmd('add %s' % path)
+        return output
