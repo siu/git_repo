@@ -1,6 +1,6 @@
 import util
 import unittest
-from pprint import pprint
+
 import git_wrapper
 from git_wrapper import GitWrapper
 from mock import Mock

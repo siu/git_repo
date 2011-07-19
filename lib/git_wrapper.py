@@ -1,8 +1,9 @@
+import os
 import subprocess
 
 GIT_EXE = '/usr/bin/git'
 
-def execute_git_cmd(cmd, cwd):
+def execute_git_cmd(cmd, cwd='.'):
     command = [ GIT_EXE ]
     command.extend(cmd.split())
     output = subprocess.check_output(command, cwd=cwd)
@@ -13,6 +14,15 @@ class GitWrapper(object):
     def __init__(self, path, git_dir='.git'):
         self.path = path
         self.git_dir = git_dir
+
+    @classmethod
+    def init(cls, path, git_dir = '.git'):
+        command = 'init %s' % path
+        if git_dir != '.git':
+            command += ' --separate-git-dir=%s' % git_dir
+
+        output = execute_git_cmd(command)
+        return GitWrapper(path, git_dir)
 
     @property
     def paths(self):

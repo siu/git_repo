@@ -1,4 +1,7 @@
+import os
+import shutil
 import unittest
+
 import util
 from git_wrapper import GitWrapper
 
@@ -31,6 +34,11 @@ class GitWrapperIntegrationTest(util.RepoTestCase):
             'second_not_committed_file.txt': '??'
             })
 
+    def test_init(self):
+        self.repo = GitWrapper.init('new_project')
+        self._temp_dir = self.repo.path
+        assert os.path.exists(os.path.join(self.repo.path, '.git'))
+
 class GitWrapperIntegrationTestExternalGitFolder(util.RepoTestCase):
     def test_paths_external(self):
         self.open_tar_repo('project03', '../project03.git')
@@ -43,3 +51,10 @@ class GitWrapperIntegrationTestExternalGitFolder(util.RepoTestCase):
             'not_committed_file.txt': '??', 
             'second_not_committed_file.txt': '??'
             })
+
+    def test_init(self):
+        self.repo = GitWrapper.init('new_project', 'new_project.git')
+        self._temp_dir = self.repo.path
+        assert os.path.exists('new_project.git')
+        shutil.rmtree('new_project.git')
+
