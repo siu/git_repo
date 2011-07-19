@@ -13,10 +13,9 @@ class GitWrapperTest(unittest.TestCase):
 
     def test_paths(self):
         self.repo = GitWrapper('bogus_repo')
-        self.mock_git_cmd("sample_file.txt\ntest/test_a.py\n")
+        self.mock_git_cmd("sample_file.txt\ntest/test_a.py")
 
-        assert('sample_file.txt' in self.repo.paths)
-        assert('test/test_a.py' in self.repo.paths)
+        self.assertEqual(self.repo.paths, ['sample_file.txt', 'test/test_a.py'])
 
         self.git_cmd.assert_called_with('--git-dir=.git ls-files',
                 self.repo.path)
@@ -25,10 +24,10 @@ class GitWrapperTest(unittest.TestCase):
         self.repo = GitWrapper('bogus_repo')
         self.mock_git_cmd("?? sample_file.txt\n?? second_sample_file.txt")
 
-        assert('sample_file.txt' in self.repo.stage)
-        assert('second_sample_file.txt' in self.repo.stage)
-        assert(self.repo.stage['sample_file.txt'] == '??')
-        assert(self.repo.stage['second_sample_file.txt'] == '??')
+        self.assertEqual(self.repo.stage, {
+            'sample_file.txt': '??', 
+            'second_sample_file.txt': '??'
+            })
 
         self.git_cmd.assert_called_with('--git-dir=.git status --porcelain',
                 self.repo.path)
@@ -37,8 +36,7 @@ class GitWrapperTest(unittest.TestCase):
         self.repo = GitWrapper('bogus_repo')
         self.mock_git_cmd(" M sample_file.txt")
 
-        assert('sample_file.txt' in self.repo.stage)
-        assert(self.repo.stage['sample_file.txt'] == 'M')
+        self.assertEqual(self.repo.stage, { 'sample_file.txt': 'M' })
 
         self.git_cmd.assert_called_with('--git-dir=.git status --porcelain',
                 self.repo.path)
