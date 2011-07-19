@@ -36,3 +36,5 @@ class GitWrapper(object):
     def add(self, path):
         return self.execute_git_cmd('add %s' % path)
 
+    def commit(self, message):
+        return self.execute_git_cmd('commit -m %s' % message)
