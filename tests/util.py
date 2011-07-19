@@ -17,6 +17,9 @@ class RepoTestCase(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self._temp_dir)
 
+    def assertEqualSet(self, first, second):
+        self.assertEqual(set(first), set(second))
+
     def open_tar_repo(self, repo_dir, git_dir = '.git'):
         repo_tar = os.path.join(os.path.dirname(__file__), 'fixtures',
                 repo_dir)
