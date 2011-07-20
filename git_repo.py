@@ -1,3 +1,16 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""
+Dead-simple git repository wrapper for Python
+
+Copyright (c) 2011, David Siñuela Pastor
+
+License: MIT (see LICENSE.txt for details)
+"""
+__author__ = 'David Siñuela Pastor'
+__license__ = 'MIT'
+
 import os
 import subprocess
 
