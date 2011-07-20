@@ -18,6 +18,10 @@ class GitRepoIntegrationTest(util.RepoTestCase):
             'second_not_committed_file.txt': '??'
             })
 
+    def test_staging_empty(self):
+        self.open_tar_repo('project01')
+        self.assertEqual(self.repo.staging, {})
+
     def test_add(self):
         self.open_tar_repo('project02')
         self.repo.add('not_committed_file.txt')

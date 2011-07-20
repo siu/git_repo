@@ -47,8 +47,10 @@ class GitRepo(object):
         output = self.git('status --porcelain')
         paths = {}
         for line in output.split('\n'):
-            status, filepath = line.strip().split()
-            paths[filepath] = status
+            line = line.strip()
+            if line:
+                status, filepath = line.split()
+                paths[filepath] = status
         return paths
 
     def git(self, command):

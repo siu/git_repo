@@ -23,6 +23,14 @@ class GitRepoTest(GitRepoBaseTest):
                 self.repo.path)
 
     def test_staging_new_files(self):
+        self.mock_git_cmd("")
+
+        self.assertEqual(self.repo.staging, {})
+
+        self.git_cmd.assert_called_with('--git-dir=.git status --porcelain',
+                self.repo.path)
+
+    def test_staging_new_files(self):
         self.mock_git_cmd("?? sample_file.txt\n?? second_sample_file.txt")
 
         self.assertEqual(self.repo.staging, {
