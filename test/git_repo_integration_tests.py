@@ -33,7 +33,15 @@ class GitRepoIntegrationTest(util.RepoTestCase):
     def test_commit(self):
         self.open_tar_repo('project02')
         self.repo.add('not_committed_file.txt')
-        self.repo.commit('Add not_committed_file.txt')
+        self.repo.commit('Add not_committed_file.txt to the repository')
+        self.assertEqual(self.repo.staging, {
+            'second_not_committed_file.txt': '??'
+            })
+
+    def test_commit_quotes_in_message(self):
+        self.open_tar_repo('project02')
+        self.repo.add('not_committed_file.txt')
+        self.repo.commit('Add "not_committed_file.txt" to the repository')
         self.assertEqual(self.repo.staging, {
             'second_not_committed_file.txt': '??'
             })

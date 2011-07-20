@@ -13,12 +13,13 @@ __license__ = 'MIT'
 
 import os
 import subprocess
+import shlex
 
 GIT_EXE = '/usr/bin/git'
 
 def execute_git_cmd(cmd, cwd='.'):
     command = [ GIT_EXE ]
-    command.extend(cmd.split())
+    command.extend(shlex.split(cmd))
     output = subprocess.check_output(command, cwd=cwd)
     return output.strip()
 
@@ -29,7 +30,7 @@ class GitRepo(object):
 
     @classmethod
     def init(cls, path, git_dir = '.git'):
-        command = 'init %s' % path
+        command = 'init "%s"' % path
         if git_dir != '.git':
             command += ' --separate-git-dir=%s' % git_dir
 
@@ -54,12 +55,12 @@ class GitRepo(object):
         return paths
 
     def git(self, command):
-        cmd = "--git-dir=%s %s" % (self.git_dir, command)
+        cmd = '--git-dir="%s" %s' % (self.git_dir, command)
         return execute_git_cmd(cmd, self.path)
 
     def add(self, path):
-        return self.git('add %s' % path)
+        return self.git('add "%s"' % path)
 
     def commit(self, message):
-        return self.git('commit -m %s' % message)
+        return self.git('commit -m "%s"' % message)
 

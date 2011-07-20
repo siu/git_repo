@@ -19,7 +19,7 @@ class GitRepoTest(GitRepoBaseTest):
 
         self.assertEqual(self.repo.paths, ['sample_file.txt', 'test/test_a.py'])
 
-        self.git_cmd.assert_called_with('--git-dir=.git ls-files',
+        self.git_cmd.assert_called_with('--git-dir=".git" ls-files',
                 self.repo.path)
 
     def test_staging_new_files(self):
@@ -27,7 +27,7 @@ class GitRepoTest(GitRepoBaseTest):
 
         self.assertEqual(self.repo.staging, {})
 
-        self.git_cmd.assert_called_with('--git-dir=.git status --porcelain',
+        self.git_cmd.assert_called_with('--git-dir=".git" status --porcelain',
                 self.repo.path)
 
     def test_staging_new_files(self):
@@ -38,7 +38,7 @@ class GitRepoTest(GitRepoBaseTest):
             'second_sample_file.txt': '??'
             })
 
-        self.git_cmd.assert_called_with('--git-dir=.git status --porcelain',
+        self.git_cmd.assert_called_with('--git-dir=".git" status --porcelain',
                 self.repo.path)
 
     def test_staging_modified_file(self):
@@ -46,7 +46,16 @@ class GitRepoTest(GitRepoBaseTest):
 
         self.assertEqual(self.repo.staging, { 'sample_file.txt': 'M' })
 
-        self.git_cmd.assert_called_with('--git-dir=.git status --porcelain',
+        self.git_cmd.assert_called_with('--git-dir=".git" status --porcelain',
+                self.repo.path)
+
+    def test_commit_quotes_message(self):
+        self.mock_git_cmd("")
+
+        self.repo.commit('unquoted message')
+
+        self.git_cmd.assert_called_with(
+                '--git-dir=".git" commit -m "unquoted message"',
                 self.repo.path)
 
 class GitRepoExternalGitDirTest(GitRepoBaseTest):
@@ -58,5 +67,5 @@ class GitRepoExternalGitDirTest(GitRepoBaseTest):
 
         assert self.repo.paths
 
-        self.git_cmd.assert_called_with('--git-dir=../bogus_repo.git ls-files', 
+        self.git_cmd.assert_called_with('--git-dir="../bogus_repo.git" ls-files', 
                 self.repo.path)
