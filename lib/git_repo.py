@@ -10,7 +10,7 @@ def execute_git_cmd(cmd, cwd='.'):
     return output.strip()
 
 
-class GitWrapper(object):
+class GitRepo(object):
     def __init__(self, path, git_dir='.git'):
         self.path = path
         self.git_dir = git_dir
@@ -22,7 +22,7 @@ class GitWrapper(object):
             command += ' --separate-git-dir=%s' % git_dir
 
         output = execute_git_cmd(command)
-        return GitWrapper(path, git_dir)
+        return GitRepo(path, git_dir)
 
     @property
     def paths(self):
@@ -31,7 +31,7 @@ class GitWrapper(object):
         return paths
 
     @property
-    def stage(self):
+    def staging(self):
         output = self.execute_git_cmd('status --porcelain')
         paths = {}
         for line in output.split('\n'):
