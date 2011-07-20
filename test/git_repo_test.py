@@ -2,7 +2,6 @@ import util
 import unittest
 
 import git_repo
-from git_repo import GitRepo
 from mock import Mock
 
 class GitRepoBaseTest(unittest.TestCase):
@@ -13,7 +12,7 @@ class GitRepoBaseTest(unittest.TestCase):
 
 class GitRepoTest(GitRepoBaseTest):
     def setUp(self):
-        self.repo = GitRepo('bogus_repo')
+        self.repo = git_repo.GitRepo('bogus_repo')
 
     def test_paths(self):
         self.mock_git_cmd("sample_file.txt\ntest/test_a.py")
@@ -44,7 +43,7 @@ class GitRepoTest(GitRepoBaseTest):
 
 class GitRepoExternalGitDirTest(GitRepoBaseTest):
     def setUp(self):
-        self.repo = GitRepo('bogus_repo', '../bogus_repo.git')
+        self.repo = git_repo.GitRepo('bogus_repo', '../bogus_repo.git')
 
     def test_paths_different_git_dir(self):
         self.mock_git_cmd("sample_file.txt\ntest/test_a.py\n")

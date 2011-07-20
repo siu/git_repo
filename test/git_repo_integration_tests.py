@@ -3,7 +3,7 @@ import shutil
 import unittest
 
 import util
-from git_repo import GitRepo
+import git_repo
 
 class GitRepoIntegrationTest(util.RepoTestCase):
     def test_paths(self):
@@ -35,7 +35,7 @@ class GitRepoIntegrationTest(util.RepoTestCase):
             })
 
     def test_init(self):
-        self.repo = GitRepo.init('new_project')
+        self.repo = git_repo.GitRepo.init('new_project')
         self._temp_dir = self.repo.path
         assert os.path.exists(os.path.join(self.repo.path, '.git'))
 
@@ -53,7 +53,7 @@ class GitRepoIntegrationTestExternalGitFolder(util.RepoTestCase):
             })
 
     def test_init(self):
-        self.repo = GitRepo.init('new_project', 'new_project.git')
+        self.repo = git_repo.GitRepo.init('new_project', 'new_project.git')
         self._temp_dir = self.repo.path
         assert os.path.exists('new_project.git')
         shutil.rmtree('new_project.git')

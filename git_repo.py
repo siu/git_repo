@@ -9,7 +9,6 @@ def execute_git_cmd(cmd, cwd='.'):
     output = subprocess.check_output(command, cwd=cwd)
     return output.strip()
 
-
 class GitRepo(object):
     def __init__(self, path, git_dir='.git'):
         self.path = path
@@ -26,25 +25,26 @@ class GitRepo(object):
 
     @property
     def paths(self):
-        output = self.execute_git_cmd('ls-files')
+        output = self.git('ls-files')
         paths = output.split('\n')
         return paths
 
     @property
     def staging(self):
-        output = self.execute_git_cmd('status --porcelain')
+        output = self.git('status --porcelain')
         paths = {}
         for line in output.split('\n'):
             status, filepath = line.strip().split()
             paths[filepath] = status
         return paths
 
-    def execute_git_cmd(self, command):
+    def git(self, command):
         cmd = "--git-dir=%s %s" % (self.git_dir, command)
         return execute_git_cmd(cmd, self.path)
 
     def add(self, path):
-        return self.execute_git_cmd('add %s' % path)
+        return self.git('add %s' % path)
 
     def commit(self, message):
-        return self.execute_git_cmd('commit -m %s' % message)
+        return self.git('commit -m %s' % message)
+
