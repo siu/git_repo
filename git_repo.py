@@ -10,6 +10,7 @@ License: MIT (see LICENSE.txt for details)
 """
 __author__ = 'David Siñuela Pastor'
 __license__ = 'MIT'
+__url__ = 'https://github.com/siu/git_repo'
 
 import os
 import subprocess
