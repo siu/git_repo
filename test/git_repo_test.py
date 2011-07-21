@@ -58,6 +58,18 @@ class GitRepoTest(GitRepoBaseTest):
                 '--git-dir=".git" commit -m "unquoted message"',
                 self.repo.path)
 
+    def test_add_all(self):
+        self.mock_git_cmd("?? sample_file.txt\n?? second_sample_file.txt")
+        add = Mock()
+        self.repo.add = add
+
+        self.repo.add_all()
+
+        self.assertEqual(add.call_args_list, [
+                (('sample_file.txt',), {}),
+                (('second_sample_file.txt',), {})
+            ])
+
 class GitRepoExternalGitDirTest(GitRepoBaseTest):
     def setUp(self):
         self.repo = git_repo.GitRepo('bogus_repo', '../bogus_repo.git')

@@ -51,6 +51,12 @@ class GitRepoIntegrationTest(util.RepoTestCase):
         self._temp_dir = self.repo.path
         assert os.path.exists(os.path.join(self.repo.path, '.git'))
 
+    def test_commit_all(self):
+        self.open_tar_repo('project02')
+        self.repo.add_all()
+        self.repo.commit('Committing all files in current work tree')
+        self.assertEqual(self.repo.staging, {})
+
 class GitRepoIntegrationTestExternalGitFolder(util.RepoTestCase):
     def test_paths_external(self):
         self.open_tar_repo('project03', '../project03.git')

@@ -61,6 +61,10 @@ class GitRepo(object):
     def add(self, path):
         return self.git('add "%s"' % path)
 
+    def add_all(self):
+        for file in self.staging.keys():
+            self.add(file)
+
     def commit(self, message):
         return self.git('commit -m "%s"' % message)
 
