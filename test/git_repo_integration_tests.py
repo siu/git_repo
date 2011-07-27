@@ -1,6 +1,10 @@
+# -*- coding: utf-8 -*-
+
 import os
 import shutil
 import unittest
+
+import datetime
 
 import util
 import git_repo
@@ -58,6 +62,18 @@ class GitRepoIntegrationTest(util.RepoTestCase):
             'not_committed_file.txt': 'A',
             'second_not_committed_file.txt': 'A'
             })
+
+    def test_log(self):
+        self.open_tar_repo('project02')
+        self.assertEqual([
+            {   'Author': 'David Siñuela Pastor <siu.4coders@gmail.com>',
+                'Commit': '15fdec753d97d45240ce724c51b06f196d9fc879',
+                'Date': datetime.datetime(2011, 7, 19, 0, 11, 52),
+                'Title': 'Add sample_file.txt',
+                'Message': 'Add sample_file.txt'
+            }],
+            self.repo.log)
+
 
 class GitRepoIntegrationTestExternalGitFolder(util.RepoTestCase):
     def test_paths_external(self):

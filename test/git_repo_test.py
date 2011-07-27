@@ -1,5 +1,9 @@
+# -*- coding: utf-8 -*-
+
 import util
 import unittest
+
+import datetime
 
 import git_repo
 from mock import Mock
@@ -12,6 +16,7 @@ class GitRepoBaseTest(unittest.TestCase):
 
 class GitRepoTest(GitRepoBaseTest):
     def setUp(self):
+        self.maxDiff = None
         self.repo = git_repo.GitRepo('bogus_repo')
 
     def test_paths(self):
@@ -69,6 +74,90 @@ class GitRepoTest(GitRepoBaseTest):
                 (('sample_file.txt',), {}),
                 (('second_sample_file.txt',), {})
             ])
+
+    def test_log(self):
+        self.mock_git_cmd("""commit f2d2cc3b4e84104b5ca4cae16a07f8b924d2bb06
+Author: David Siñuela Pastor <siu.4coders@gmail.com>
+Date:   Thu Jul 21 09:39:48 2011 +0200
+
+    Don't commit in test_add_all integration test
+
+commit 018825f04b0f58f3f9b852da3e21f9e84441d657
+Author: David Siñuela Pastor <siu.4coders@gmail.com>
+Date:   Thu Jul 20 09:39:48 2011 +0200
+
+    Add README.md""")
+        self.assertEqual([
+            {
+            'Commit': 'f2d2cc3b4e84104b5ca4cae16a07f8b924d2bb06',
+            'Author': 'David Siñuela Pastor <siu.4coders@gmail.com>',
+            'Date': datetime.datetime(2011, 7, 21, 9, 39, 48),
+            'Title': 'Don\'t commit in test_add_all integration test',
+            'Message': 'Don\'t commit in test_add_all integration test',
+            },
+            {
+            'Commit': '018825f04b0f58f3f9b852da3e21f9e84441d657',
+            'Author': 'David Siñuela Pastor <siu.4coders@gmail.com>',
+            'Date': datetime.datetime(2011, 7, 20, 9, 39, 48),
+            'Title': 'Add README.md',
+            'Message': 'Add README.md'
+            }], self.repo.log)
+        self.git_cmd.assert_called_with(
+                '--git-dir=".git" log --format=medium',
+                self.repo.path)
+
+    def test_single_log(self):
+        self.mock_git_cmd("""commit f2d2cc3b4e84104b5ca4cae16a07f8b924d2bb06
+Author: David Siñuela Pastor <siu.4coders@gmail.com>
+Date:   Thu Jul 21 09:39:48 2011 +0200
+
+    Don't commit in test_add_all integration test""")
+        self.assertEqual([
+            {
+            'Commit': 'f2d2cc3b4e84104b5ca4cae16a07f8b924d2bb06',
+            'Author': 'David Siñuela Pastor <siu.4coders@gmail.com>',
+            'Date': datetime.datetime(2011, 7, 21, 9, 39, 48),
+            'Title': 'Don\'t commit in test_add_all integration test',
+            'Message': 'Don\'t commit in test_add_all integration test'
+            }], self.repo.log)
+        self.git_cmd.assert_called_with(
+                '--git-dir=".git" log --format=medium',
+                self.repo.path)
+
+    def test_multiline_log(self):
+        self.mock_git_cmd("""commit f2d2cc3b4e84104b5ca4cae16a07f8b924d2bb06
+Author: David Siñuela Pastor <siu.4coders@gmail.com>
+Date:   Thu Jul 21 09:39:48 2011 +0200
+
+    Don't commit in test_add_all integration test
+    Not needed
+
+commit 018825f04b0f58f3f9b852da3e21f9e84441d657
+Author: David Siñuela Pastor <siu.4coders@gmail.com>
+Date:   Thu Jul 20 09:39:48 2011 +0200
+
+    Add README.md
+    
+    Installation instructions""")
+        self.assertEqual([
+            {
+            'Commit': 'f2d2cc3b4e84104b5ca4cae16a07f8b924d2bb06',
+            'Author': 'David Siñuela Pastor <siu.4coders@gmail.com>',
+            'Date': datetime.datetime(2011, 7, 21, 9, 39, 48),
+            'Title': 'Don\'t commit in test_add_all integration test',
+            'Message': 'Don\'t commit in test_add_all integration test\nNot needed'
+            },
+            {
+            'Commit': '018825f04b0f58f3f9b852da3e21f9e84441d657',
+            'Author': 'David Siñuela Pastor <siu.4coders@gmail.com>',
+            'Date': datetime.datetime(2011, 7, 20, 9, 39, 48),
+            'Title': 'Add README.md',
+            'Message': 'Add README.md\n\nInstallation instructions'
+            }], self.repo.log)
+        self.git_cmd.assert_called_with(
+                '--git-dir=".git" log --format=medium',
+                self.repo.path)
+
 
 class GitRepoExternalGitDirTest(GitRepoBaseTest):
     def setUp(self):
