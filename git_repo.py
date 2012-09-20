@@ -234,20 +234,15 @@ class GitRepo(object):
         raises GitRepoException the return code is different than 0
         returns the output as string"""
 
-        #print(cmd, env)
-
         command = [ GIT_EXE ]
         command.extend(shlex.split(cmd))
         cmd = subprocess.Popen(command, cwd=cwd, stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE)
-        cmd.wait()
-        output = cmd.stdout.read()
-        output = GitRepo.touni(output)
-
-        #print(cmd.returncode)
+        out, err = cmd.communicate()
+        output = GitRepo.touni(out)
 
         if cmd.returncode != 0:
-            raise GitRepoException(cmd.stderr.read())
+            raise GitRepoException(err)
 
         return output.strip()
 
